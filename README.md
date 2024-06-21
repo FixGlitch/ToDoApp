@@ -23,3 +23,9 @@ Before setting up the project, ensure you have the following installed:
 ## Setting Up the Development Environment
 
 ### Backend Setup (Node.js with PostgreSQL)
+
+for start:
+1: npm install
+2: for run the proyect = npm start
+3: for run in android = npx react-native run-android
+3: for run in ios = npx react-native run-ios
