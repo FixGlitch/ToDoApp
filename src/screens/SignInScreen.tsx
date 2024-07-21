@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,21 +6,39 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
-import {useAppDispatch, useAppSelector} from '../redux/hooks';
-import {loginUser} from '../redux/actions/userActions';
-import {selectError, selectLoading} from '../redux/reducers/userReducer';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { loginUser } from '../redux/actions/userActions';
+import { selectError, selectLoading } from '../redux/reducers/userReducer';
 import TouchableButton from '../components/button/TouchableButton';
 
-const SignInScreen: React.FC<{navigation: any}> = ({navigation}) => {
+const SignInScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false); // State to track login attempt
   const dispatch = useAppDispatch();
   const loading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
 
   const handleSignIn = async () => {
-    await dispatch(loginUser({username, password}));
+    if (!username || !password) {
+      Alert.alert('Please enter username and password');
+      return;
+    }
+
+    setIsLoggingIn(true); // Start login attempt
+    try {
+      await dispatch(loginUser({ username, password }));
+      // Assuming login was successful (handle this based on actual logic in userActions)
+      setIsLoggingIn(false); // Reset login attempt state
+      navigation.replace('Home'); // Redirect to Home screen
+    } catch (error) {
+      setIsLoggingIn(false); // Reset login attempt state
+      // Handle error (display error message, etc.)
+      console.error('Login error:', error);
+      Alert.alert('Login failed', 'Please check your credentials and try again.');
+    }
   };
 
   return (
@@ -39,7 +57,7 @@ const SignInScreen: React.FC<{navigation: any}> = ({navigation}) => {
         value={password}
         onChangeText={setPassword}
       />
-      {loading ? (
+      {loading || isLoggingIn ? (
         <ActivityIndicator size="large" color="#6200ee" />
       ) : (
         <TouchableButton text="Sign In" onClick={handleSignIn} />

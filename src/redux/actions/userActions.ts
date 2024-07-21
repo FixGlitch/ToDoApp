@@ -1,15 +1,17 @@
-import {Dispatch} from 'redux';
-import axios, {AxiosError} from 'axios';
-import {setUser, setLoading, setError} from '../reducers/userReducer';
+import { Dispatch } from 'redux';
+import axios, { AxiosError } from 'axios';
+import { setUser, setLoading, setError } from '../reducers/userReducer';
+import { REACT_APP_BACKEND_URL } from '@env';
 
-const BASE_URL = process.env.REACT_APP_BACKEND_URL;
-
-export const registerUser =
-  (userData: {username: string; password: string}) =>
+export const createUser =
+  (userData: { username: string; password: string }) =>
   async (dispatch: Dispatch) => {
     try {
       dispatch(setLoading(true));
-      const response = await axios.post(`${BASE_URL}/user/register`, userData);
+      const response = await axios.post(
+        `${REACT_APP_BACKEND_URL}/user`,
+        userData,
+      );
       dispatch(setUser(response.data));
     } catch (error: any) {
       handleAxiosError(error, dispatch);
@@ -18,12 +20,13 @@ export const registerUser =
     }
   };
 
+
 export const loginUser =
   (userData: {username: string; password: string}) =>
   async (dispatch: Dispatch) => {
     try {
       dispatch(setLoading(true));
-      const response = await axios.post(`${BASE_URL}/user/login`, userData);
+      const response = await axios.post(`${REACT_APP_BACKEND_URL}/user/login`, userData);
       dispatch(setUser(response.data));
     } catch (error: any) {
       handleAxiosError(error, dispatch);
@@ -35,7 +38,7 @@ export const loginUser =
 export const logoutUser = () => async (dispatch: Dispatch) => {
   try {
     dispatch(setLoading(true));
-    await axios.post(`${BASE_URL}/user/logout`);
+    await axios.post(`${REACT_APP_BACKEND_URL}/user/logout`);
     dispatch(setUser(null));
   } catch (error: any) {
     handleAxiosError(error, dispatch);
