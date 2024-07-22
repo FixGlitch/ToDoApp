@@ -1,5 +1,5 @@
-import { Dispatch } from 'redux';
 import axios, { AxiosError } from 'axios';
+import { Dispatch } from 'redux';
 import { setUser, setLoading, setError } from '../reducers/userReducer';
 import { REACT_APP_BACKEND_URL } from '@env';
 
@@ -20,13 +20,15 @@ export const createUser =
     }
   };
 
-
 export const loginUser =
-  (userData: {username: string; password: string}) =>
+  (userData: { username: string; password: string }) =>
   async (dispatch: Dispatch) => {
     try {
       dispatch(setLoading(true));
-      const response = await axios.post(`${REACT_APP_BACKEND_URL}/user/login`, userData);
+      const response = await axios.post(
+        `${REACT_APP_BACKEND_URL}/user/login`,
+        userData,
+      );
       dispatch(setUser(response.data));
     } catch (error: any) {
       handleAxiosError(error, dispatch);

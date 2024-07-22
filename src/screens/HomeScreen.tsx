@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
@@ -11,6 +18,14 @@ import TouchableButton from '../components/button/TouchableButton';
 
 const TASKS_STORAGE_KEY = '@tasks';
 const COMPLETED_TASKS_STORAGE_KEY = '@completedTasks';
+
+const COLORS = {
+  background: '#f5f5f5',
+  dateButtonBackground: '#ddd',
+  dateButtonText: '#333',
+  inputBackground: '#fff',
+  border: '#ddd',
+};
 
 const loadTasks = async (key: string): Promise<TaskType[]> => {
   try {
@@ -33,7 +48,7 @@ const saveTasks = async (key: string, tasks: TaskType[]) => {
   }
 };
 
-const HomeScreen: React.FC = () => {
+const HomeScreen = () => {
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [completedTasks, setCompletedTasks] = useState<TaskType[]>([]);
   const [task, setTask] = useState('');
@@ -41,7 +56,7 @@ const HomeScreen: React.FC = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  
+
   useEffect(() => {
     const fetchTasks = async () => {
       const loadedTasks = await loadTasks(TASKS_STORAGE_KEY);
@@ -55,7 +70,11 @@ const HomeScreen: React.FC = () => {
 
   const addTask = () => {
     if (task.length > 0) {
-      const newTask = { title: task, completed: false, date: format(date, "yyyy-MM-dd") };
+      const newTask = {
+        title: task,
+        completed: false,
+        date: format(date, 'yyyy-MM-dd'),
+      };
       const newTasks = [...tasks, newTask];
       setTasks(newTasks);
       saveTasks(TASKS_STORAGE_KEY, newTasks);
@@ -89,7 +108,10 @@ const HomeScreen: React.FC = () => {
         />
       </View>
       <View style={styles.dateTimeContainer}>
-        <TouchableOpacity style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
+        <TouchableOpacity
+          style={styles.dateButton}
+          onPress={() => setShowDatePicker(true)}
+        >
           <Text style={styles.dateButtonText}>{date.toDateString()}</Text>
         </TouchableOpacity>
         {showDatePicker && (
@@ -108,7 +130,10 @@ const HomeScreen: React.FC = () => {
       </View>
       <View>
         <TouchableButton text="Add" onClick={addTask} />
-        <TouchableButton text="View History" onClick={() => navigation.navigate('History')} />
+        <TouchableButton
+          text="View History"
+          onClick={() => navigation.navigate('History')}
+        />
       </View>
     </View>
   );
@@ -116,34 +141,34 @@ const HomeScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: COLORS.background,
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+  },
+  dateButton: {
+    backgroundColor: COLORS.dateButtonBackground,
+    borderRadius: 5,
+    padding: 10,
+  },
+  dateButtonText: {
+    color: COLORS.dateButtonText,
+    fontSize: 18,
+  },
+  dateTimeContainer: {
+    marginBottom: 10,
+  },
+  input: {
+    backgroundColor: COLORS.inputBackground,
+    borderColor: COLORS.border,
+    borderRadius: 5,
+    borderWidth: 1,
+    fontSize: 20,
+    height: 60,
+    paddingHorizontal: 15,
   },
   inputContainer: {
     marginBottom: 10,
   },
-  input: {
-    height: 60, 
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 15,
-    backgroundColor: '#fff',
-    fontSize: 20, 
-  },
-  dateTimeContainer: {
-    marginBottom: 10, 
-  },
-  dateButton: {
-    padding: 10,
-    backgroundColor: '#ddd',
-    borderRadius: 5,
-  },
-  dateButtonText: {
-    fontSize: 18,
-    color: '#333',
-  }
 });
 
 export default HomeScreen;

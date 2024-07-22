@@ -1,6 +1,6 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {RootState} from '../store';
-import {User} from '../types/userTypes';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../store';
+import { User } from '../types/userTypes';
 
 interface UserState {
   user: User | null;
@@ -30,7 +30,7 @@ const userSlice = createSlice({
   },
 });
 
-export const {setUser, setLoading, setError} = userSlice.actions;
+export const { setUser, setLoading, setError } = userSlice.actions;
 
 export const selectUser = (state: RootState) => state.user.user;
 export const selectLoading = (state: RootState) => state.user.loading;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 interface TaskProps {
   task: {
@@ -11,7 +11,15 @@ interface TaskProps {
   completeTask: (index: number) => void;
 }
 
-const Task: React.FC<TaskProps> = ({task, index, completeTask}) => {
+const COLORS = {
+  completeButton: 'green',
+  background: '#fff',
+  shadow: '#000',
+  taskText: '#333',
+  taskTextCompleted: 'gray',
+};
+
+const Task = ({ task, index, completeTask }: TaskProps) => {
   return (
     <View style={styles.taskContainer}>
       <Text style={task.completed ? styles.taskTextCompleted : styles.taskText}>
@@ -25,32 +33,32 @@ const Task: React.FC<TaskProps> = ({task, index, completeTask}) => {
 };
 
 const styles = StyleSheet.create({
+  completeButton: {
+    color: COLORS.completeButton,
+    fontSize: 18,
+  },
   taskContainer: {
+    alignItems: 'center',
+    backgroundColor: COLORS.background,
+    borderRadius: 10,
+    elevation: 3,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
     margin: 10,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    padding: 15,
+    shadowColor: COLORS.shadow,
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 3,
   },
   taskText: {
+    color: COLORS.taskText,
     fontSize: 18,
-    color: '#333',
   },
   taskTextCompleted: {
+    color: COLORS.taskTextCompleted,
     fontSize: 18,
     textDecorationLine: 'line-through',
-    color: 'gray',
-  },
-  completeButton: {
-    fontSize: 18,
-    color: 'green',
   },
 });
 

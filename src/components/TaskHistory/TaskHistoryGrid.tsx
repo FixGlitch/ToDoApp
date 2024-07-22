@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {format} from 'date-fns';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { format } from 'date-fns';
 
 interface CompletedTasksDate {
   date: string;
@@ -12,19 +12,39 @@ interface HistoryGridProps {
   handleDayPress: (date: string) => void;
 }
 
-const getColor = (count: number) => {
-  if (count > 4) return '#216e39';
-  if (count > 3) return '#30a14e';
-  if (count > 2) return '#40c463';
-  if (count > 1) return '#9be9a8';
-  return '#ebedf0';
+const COLORS = {
+  highCount: '#216e39',
+  mediumHighCount: '#30a14e',
+  mediumCount: '#40c463',
+  lowCount: '#9be9a8',
+  noCount: '#ebedf0',
 };
 
-const TaskHistoryGrid: React.FC<HistoryGridProps> = ({
+const getColor = (count: number) => {
+  if (count > 4) {
+    return COLORS.highCount;
+  }
+  if (count > 3) {
+    return COLORS.mediumHighCount;
+  }
+  if (count > 2) {
+    return COLORS.mediumCount;
+  }
+  if (count > 1) {
+    return COLORS.lowCount;
+  }
+  return COLORS.noCount;
+};
+
+const TaskHistoryGrid = ({
   completedTasks,
   handleDayPress,
-}) => {
+}: HistoryGridProps) => {
   const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+  const getDayStyle = (date: string | null, count: number) => ({
+    backgroundColor: date ? getColor(count) : 'transparent',
+  });
 
   return (
     <View>
@@ -39,11 +59,9 @@ const TaskHistoryGrid: React.FC<HistoryGridProps> = ({
         {completedTasks.map((day, index) => (
           <TouchableOpacity
             key={index}
-            style={[
-              styles.day,
-              {backgroundColor: day.date ? getColor(day.count) : 'transparent'},
-            ]}
-            onPress={() => day.date && handleDayPress(day.date)}>
+            style={[styles.day, getDayStyle(day.date, day.count)]}
+            onPress={() => day.date && handleDayPress(day.date)}
+          >
             <Text style={styles.dayText}>
               {day.date ? format(new Date(day.date), 'd') : ''}
             </Text>
@@ -55,30 +73,30 @@ const TaskHistoryGrid: React.FC<HistoryGridProps> = ({
 };
 
 const styles = StyleSheet.create({
-  weekDaysContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 10,
-  },
-  weekDay: {
+  day: {
+    alignItems: 'center',
+    height: 30,
+    justifyContent: 'center',
+    margin: 7,
     width: 30,
-    textAlign: 'center',
-    fontWeight: 'bold',
+  },
+  dayText: {
+    fontSize: 12,
   },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-  day: {
+  weekDay: {
+    fontWeight: 'bold',
+    textAlign: 'center',
     width: 30,
-    height: 30,
-    margin: 7,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  dayText: {
-    fontSize: 12,
+  weekDaysContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 10,
   },
 });
 

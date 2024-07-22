@@ -1,4 +1,14 @@
 module.exports = {
   root: true,
-  extends: '@react-native',
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:react-native/all',
+    '@react-native',
+  ],
+  plugins: ['react', 'react-native'],
+  env: {
+    'react-native/react-native': true,
+    browser: true,
+  },
 };

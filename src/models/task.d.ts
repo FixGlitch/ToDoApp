@@ -1,5 +1,5 @@
 export interface TaskType {
-    title: string;
-    completed: boolean;
-    date: string;
-  }
+  title: string;
+  completed: boolean;
+  date: string;
+}

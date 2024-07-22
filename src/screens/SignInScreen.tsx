@@ -13,10 +13,16 @@ import { loginUser } from '../redux/actions/userActions';
 import { selectError, selectLoading } from '../redux/reducers/userReducer';
 import TouchableButton from '../components/button/TouchableButton';
 
-const SignInScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
+const COLORS = {
+  primary: '#6200ee',
+  error: 'red',
+  border: '#ddd',
+};
+
+const SignInScreen = ({ navigation }: { navigation: any }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoggingIn, setIsLoggingIn] = useState(false); // State to track login attempt
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const dispatch = useAppDispatch();
   const loading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
@@ -27,17 +33,18 @@ const SignInScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       return;
     }
 
-    setIsLoggingIn(true); // Start login attempt
+    setIsLoggingIn(true);
     try {
       await dispatch(loginUser({ username, password }));
-      // Assuming login was successful (handle this based on actual logic in userActions)
-      setIsLoggingIn(false); // Reset login attempt state
-      navigation.replace('Home'); // Redirect to Home screen
-    } catch (error) {
-      setIsLoggingIn(false); // Reset login attempt state
-      // Handle error (display error message, etc.)
-      console.error('Login error:', error);
-      Alert.alert('Login failed', 'Please check your credentials and try again.');
+      setIsLoggingIn(false);
+      navigation.replace('Home');
+    } catch (err) {
+      setIsLoggingIn(false);
+      console.error('Login error:', err);
+      Alert.alert(
+        'Login failed',
+        'Please check your credentials and try again.',
+      );
     }
   };
 
@@ -58,7 +65,7 @@ const SignInScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         onChangeText={setPassword}
       />
       {loading || isLoggingIn ? (
-        <ActivityIndicator size="large" color="#6200ee" />
+        <ActivityIndicator size="large" color={COLORS.primary} />
       ) : (
         <TouchableButton text="Sign In" onClick={handleSignIn} />
       )}
@@ -72,31 +79,31 @@ const SignInScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     paddingHorizontal: 20,
+  },
+  errorText: {
+    color: COLORS.error,
+    marginTop: 10,
+  },
+  input: {
+    borderColor: COLORS.border,
+    borderWidth: 1,
+    height: 40,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    width: '100%',
+  },
+  registerText: {
+    color: COLORS.primary,
+    marginTop: 20,
+    textDecorationLine: 'underline',
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-  errorText: {
-    color: 'red',
-    marginTop: 10,
-  },
-  registerText: {
-    color: '#6200ee',
-    marginTop: 20,
-    textDecorationLine: 'underline',
   },
 });
 

@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Modal, Text, TouchableOpacity, TouchableWithoutFeedback, StyleSheet} from 'react-native';
+import {
+  View,
+  Modal,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  StyleSheet,
+} from 'react-native';
 
 interface ModalBoxProps {
   modalVisible: boolean;
@@ -8,32 +15,47 @@ interface ModalBoxProps {
   tasksForSelectedDate: { title: string; completed: boolean; date: string }[];
 }
 
-const TaskHistoryDetails: React.FC<ModalBoxProps> = ({
+const COLORS = {
+  primary: '#6200ee',
+  white: '#ffffff',
+  blackOverlay: 'rgba(0,0,0,0.5)',
+  green: 'green',
+};
+
+const TaskHistoryDetails = ({
   modalVisible,
   setModalVisible,
   selectedDate,
-  tasksForSelectedDate
-}) => {
+  tasksForSelectedDate,
+}: ModalBoxProps) => {
   return (
     <Modal
-    animationType="slide"
-    transparent={true}
-    visible={modalVisible}
-    onRequestClose={() => {
-      setModalVisible(!modalVisible);
-    }}
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        setModalVisible(!modalVisible);
+      }}
     >
-      <TouchableWithoutFeedback onPress={() => {setModalVisible(false)}}>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          setModalVisible(false);
+        }}
+      >
         <View style={styles.modalContainer}>
           <TouchableWithoutFeedback onPress={() => {}}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Tasks for {selectedDate}</Text>
               {tasksForSelectedDate.length > 0 ? (
                 tasksForSelectedDate.map((task, index) => (
-                  <Text key={index} style={styles.taskText}>{task.title}  <Text style={styles.completeButton}>✔</Text></Text>
+                  <Text key={index} style={styles.taskText}>
+                    {task.title} <Text style={styles.completeButton}>✔</Text>
+                  </Text>
                 ))
               ) : (
-                <Text style={styles.taskText}>No tasks completed on this day.</Text>
+                <Text style={styles.taskText}>
+                  No tasks completed on this day.
+                </Text>
               )}
               <TouchableOpacity
                 style={styles.closeButton}
@@ -42,7 +64,7 @@ const TaskHistoryDetails: React.FC<ModalBoxProps> = ({
                 <Text style={styles.closeButtonText}>Close</Text>
               </TouchableOpacity>
             </View>
-            </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
     </Modal>
@@ -50,18 +72,32 @@ const TaskHistoryDetails: React.FC<ModalBoxProps> = ({
 };
 
 const styles = StyleSheet.create({
+  closeButton: {
+    backgroundColor: COLORS.primary,
+    borderRadius: 5,
+    marginTop: 20,
+    padding: 10,
+  },
+  closeButtonText: {
+    color: COLORS.white,
+    fontSize: 16,
+  },
+  completeButton: {
+    color: COLORS.green,
+    fontSize: 18,
+  },
   modalContainer: {
+    alignItems: 'center',
+    backgroundColor: COLORS.blackOverlay,
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
-    width: 300,
-    padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
     alignItems: 'center',
+    backgroundColor: COLORS.white,
+    borderRadius: 10,
+    padding: 20,
+    width: 300,
   },
   modalTitle: {
     fontSize: 20,
@@ -72,20 +108,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,
   },
-  closeButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: '#6200ee',
-    borderRadius: 5,
-  },
-  closeButtonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  completeButton: {
-    fontSize: 18,
-    color: 'green',
-  }
 });
 
 export default TaskHistoryDetails;
