@@ -8,10 +8,20 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { loginUser } from '../redux/actions/userActions';
-import { selectError, selectLoading } from '../redux/reducers/userReducer';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { loginUser } from '../../redux/actions/userActions';
 import TouchableButton from '../components/button/TouchableButton';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigation/types';
+
+type SignInScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'SignIn'
+>;
+
+interface SignInScreenProps {
+  navigation: SignInScreenNavigationProp;
+}
 
 const COLORS = {
   primary: '#6200ee',
@@ -19,13 +29,11 @@ const COLORS = {
   border: '#ddd',
 };
 
-const SignInScreen = ({ navigation }: { navigation: any }) => {
+const SignInScreen = ({ navigation }: SignInScreenProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const dispatch = useAppDispatch();
-  const loading = useAppSelector(selectLoading);
-  const error = useAppSelector(selectError);
+  const { loading, error } = useAppSelector((state) => state.user);
 
   const handleSignIn = async () => {
     if (!username || !password) {
@@ -33,13 +41,14 @@ const SignInScreen = ({ navigation }: { navigation: any }) => {
       return;
     }
 
-    setIsLoggingIn(true);
     try {
-      await dispatch(loginUser({ username, password }));
-      setIsLoggingIn(false);
-      navigation.replace('Home');
+      const resultAction = await dispatch(
+        loginUser({ username, password }),
+      ).unwrap();
+      if (resultAction) {
+        navigation.replace('Home');
+      }
     } catch (err) {
-      setIsLoggingIn(false);
       console.error('Login error:', err);
       Alert.alert(
         'Login failed',
@@ -64,10 +73,10 @@ const SignInScreen = ({ navigation }: { navigation: any }) => {
         value={password}
         onChangeText={setPassword}
       />
-      {loading || isLoggingIn ? (
+      {loading ? (
         <ActivityIndicator size="large" color={COLORS.primary} />
       ) : (
-        <TouchableButton text="Sign In" onClick={handleSignIn} />
+        <TouchableButton text="Sign In" onPress={handleSignIn} />
       )}
       {error && <Text style={styles.errorText}>{error}</Text>}
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>

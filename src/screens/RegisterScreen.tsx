@@ -6,11 +6,23 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { createUser } from '../redux/actions/userActions';
-import { selectError, selectLoading } from '../redux/reducers/userReducer';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { createUser } from '../../redux/actions/userActions';
+import { RootState } from '../../redux/store';
 import TouchableButton from '../components/button/TouchableButton';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigation/types';
+
+type RegisterScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Register'
+>;
+
+interface RegisterScreenProps {
+  navigation: RegisterScreenNavigationProp;
+}
 
 const COLORS = {
   primary: '#6200ee',
@@ -18,15 +30,29 @@ const COLORS = {
   border: '#ddd',
 };
 
-const RegisterScreen = ({ navigation }: { navigation: any }) => {
+const RegisterScreen = ({ navigation }: RegisterScreenProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
   const dispatch = useAppDispatch();
-  const loading = useAppSelector(selectLoading);
-  const error = useAppSelector(selectError);
+  const { loading, error } = useAppSelector((state: RootState) => state.user);
 
   const handleRegister = async () => {
-    await dispatch(createUser({ username, password }));
+    if (!username || !password) {
+      Alert.alert('Please enter username and password');
+      return;
+    }
+
+    try {
+      await dispatch(createUser({ username, password })).unwrap();
+      navigation.replace('Home');
+    } catch (err) {
+      Alert.alert(
+        'Registration failed',
+        'Please check your credentials and try again.',
+      );
+      console.error('Registration error:', err);
+    }
   };
 
   return (
@@ -48,7 +74,7 @@ const RegisterScreen = ({ navigation }: { navigation: any }) => {
       {loading ? (
         <ActivityIndicator size="large" color={COLORS.primary} />
       ) : (
-        <TouchableButton text="Register" onClick={handleRegister} />
+        <TouchableButton text="Register" onPress={handleRegister} />
       )}
       {error && <Text style={styles.errorText}>{error}</Text>}
       <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>

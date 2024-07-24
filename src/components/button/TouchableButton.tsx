@@ -1,8 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  GestureResponderEvent,
+} from 'react-native';
 
 interface ButtonProps {
-  onClick: () => void;
+  onPress: (event: GestureResponderEvent) => void;
   text: string;
 }
 
@@ -11,9 +16,9 @@ const COLORS = {
   text: 'white',
 };
 
-const TouchableButton = ({ onClick, text }: ButtonProps) => {
+const TouchableButton = ({ onPress, text }: ButtonProps) => {
   return (
-    <TouchableOpacity style={styles.buttonStyle} onPress={onClick}>
+    <TouchableOpacity style={styles.buttonStyle} onPress={onPress}>
       <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
   );
