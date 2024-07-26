@@ -2,26 +2,54 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { RootStackParamList } from './types';
-import SignInScreen from '../screens/SignInScreen';
-import HomeScreen from '../screens/HomeScreen';
-import CreateTaskScreen from '../screens/CreateTaskScreen';
-import EditTaskScreen from '../screens/EditTaskScreen';
-import CategoryListScreen from '../screens/CategoryListScreen';
-import AddCategoryScreen from '../screens/AddCategoryScreen';
-import EditCategoryScreen from '../screens/EditCategoryScreen';
+import SignIn from '../screens/SignIn/SignIn';
+import Home from '../screens/Home/Home';
+import CreateTask from '../screens/CreateTask/CreateTask';
+import EditTask from '../screens/EditTask/EditTask';
+import CategoryList from '../screens/CategoryList/CategoryList';
+import AddCategory from '../screens/AddCategory/AddCategory';
+import EditCategory from '../screens/EditCategory/EditCategory';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const Navigation = () => (
   <NavigationContainer>
     <Stack.Navigator>
-      <Stack.Screen name="SignIn" component={SignInScreen} />
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="CreateTaskScreen" component={CreateTaskScreen} />
-      <Stack.Screen name="EditTaskScreen" component={EditTaskScreen} />
-      <Stack.Screen name="CategoryListScreen" component={CategoryListScreen} />
-      <Stack.Screen name="AddCategoryScreen" component={AddCategoryScreen} />
-      <Stack.Screen name="EditCategoryScreen" component={EditCategoryScreen} />
+      <Stack.Screen
+        name="SignIn"
+        component={SignIn}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Home"
+        component={Home}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CreateTask"
+        component={CreateTask}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EditTask"
+        component={EditTask}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CategoryList"
+        component={CategoryList}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddCategory"
+        component={AddCategory}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EditCategory"
+        component={EditCategory}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   </NavigationContainer>
 );

@@ -3,10 +3,10 @@ export type RootStackParamList = {
   Register: undefined;
   Home: undefined;
   History: undefined;
-  CreateTaskScreen: undefined;
-  EditTaskScreen: { task_id: string };
-  TaskDetailsScreen: { task_id: string };
-  CategoryListScreen: undefined;
-  AddCategoryScreen: undefined;
-  EditCategoryScreen: { category_id: string };
+  CreateTask: undefined;
+  EditTask: { task_id: string };
+  TaskDetail: { task_id: string };
+  CategoryList: undefined;
+  AddCategory: undefined;
+  EditCategory: { category_id: string };
 };

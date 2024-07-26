@@ -5,8 +5,8 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
 } from 'react-native';
+import { styles } from './styles';
 
 interface ModalBoxProps {
   modalVisible: boolean;
@@ -14,13 +14,6 @@ interface ModalBoxProps {
   selectedDate: string | null;
   tasksForSelectedDate: { title: string; completed: boolean; date: string }[];
 }
-
-const COLORS = {
-  primary: '#6200ee',
-  white: '#ffffff',
-  blackOverlay: 'rgba(0,0,0,0.5)',
-  green: 'green',
-};
 
 const TaskHistoryDetails = ({
   modalVisible,
@@ -70,44 +63,5 @@ const TaskHistoryDetails = ({
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  closeButton: {
-    backgroundColor: COLORS.primary,
-    borderRadius: 5,
-    marginTop: 20,
-    padding: 10,
-  },
-  closeButtonText: {
-    color: COLORS.white,
-    fontSize: 16,
-  },
-  completeButton: {
-    color: COLORS.green,
-    fontSize: 18,
-  },
-  modalContainer: {
-    alignItems: 'center',
-    backgroundColor: COLORS.blackOverlay,
-    flex: 1,
-    justifyContent: 'center',
-  },
-  modalContent: {
-    alignItems: 'center',
-    backgroundColor: COLORS.white,
-    borderRadius: 10,
-    padding: 20,
-    width: 300,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  taskText: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-});
 
 export default TaskHistoryDetails;

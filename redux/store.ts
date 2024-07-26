@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import taskReducer from './reducers/taskReducer';
 import userReducer from './reducers/userReducer';
 import categoryReducer from './reducers/categoryReducer';
+import themeReducer from './reducers/themeReducer';
 
 export const store = configureStore({
   reducer: {
-    tasks: taskReducer,
     user: userReducer,
+    tasks: taskReducer,
     categories: categoryReducer,
+    theme: themeReducer,
   },
 });
 

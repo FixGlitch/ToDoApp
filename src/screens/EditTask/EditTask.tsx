@@ -6,25 +6,18 @@ import {
   Button,
   Alert,
   ActivityIndicator,
-  StyleSheet,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../redux/store';
-import { getTaskById, updateTask } from '../../redux/actions/taskActions';
-import { Task } from '../../redux/types/taskTypes';
+import { RootState, AppDispatch } from '../../../redux/store';
+import { getTaskById, updateTask } from '../../../redux/actions/taskActions';
+import { Task } from '../../../redux/types/taskTypes';
 import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/types';
+import { RootStackParamList } from '../../navigation/types';
+import { styles } from './styles';
 
-type EditTaskScreenProps = StackScreenProps<
-  RootStackParamList,
-  'EditTaskScreen'
->;
+type EditTaskProps = StackScreenProps<RootStackParamList, 'EditTask'>;
 
-const COLORS = {
-  border: '#ccc',
-};
-
-const EditTaskScreen = ({ route, navigation }: EditTaskScreenProps) => {
+const EditTask = ({ route, navigation }: EditTaskProps) => {
   const { task_id } = route.params;
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -98,23 +91,4 @@ const EditTaskScreen = ({ route, navigation }: EditTaskScreenProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 16,
-  },
-  input: {
-    borderColor: COLORS.border,
-    borderWidth: 1,
-    height: 40,
-    marginBottom: 16,
-    paddingHorizontal: 8,
-  },
-  label: {
-    fontSize: 18,
-    marginBottom: 8,
-  },
-});
-
-export default EditTaskScreen;
+export default EditTask;

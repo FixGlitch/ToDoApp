@@ -1,23 +1,30 @@
 import React, { useCallback } from 'react';
 import { View, Text, Button, FlatList, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../redux/store';
-import { getAllTasks, toggleTaskStatus } from '../../redux/actions/taskActions';
-import TaskRow from '../components/Task/Task';
-import { logoutUser } from '../../redux/actions/userActions';
+import { RootState, AppDispatch } from '../../../redux/store';
+import {
+  getAllTasks,
+  toggleTaskStatus,
+} from '../../../redux/actions/taskActions';
+import TaskRow from '../../components/Task/Task';
+import { logoutUser } from '../../../redux/actions/userActions';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../navigation/types';
+import { RootStackParamList } from '../../navigation/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTheme } from 'react-native-paper';
+import ThemeToggleButton from '../../components/DarkSwitcher/DarkSwitcher';
+import { styles } from './styles';
 
-type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+type HomeNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
-const HomeScreen = () => {
+const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const navigation = useNavigation<HomeNavigationProp>();
   const { tasks, loading, error } = useSelector(
     (state: RootState) => state.tasks,
   );
+  const { colors } = useTheme();
 
   const fetchTasks = useCallback(() => {
     dispatch(getAllTasks());
@@ -43,20 +50,26 @@ const HomeScreen = () => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return <ActivityIndicator size="large" color={colors.primary} />;
   }
 
   if (error) {
-    return <Text>Error: {error}</Text>;
+    return (
+      <Text style={[styles.errorText, { color: colors.error }]}>
+        Error: {error}
+      </Text>
+    );
   }
 
   return (
-    <View>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <ThemeToggleButton />
       <Button
         title="Create Task"
-        onPress={() => navigation.navigate('CreateTaskScreen')}
+        onPress={() => navigation.navigate('CreateTask')}
+        color={colors.primary}
       />
-      <Button title="Logout" onPress={handleLogout} />
+      <Button title="Logout" onPress={handleLogout} color={colors.primary} />
       <FlatList
         data={tasks}
         renderItem={({ item }) => (
@@ -64,7 +77,7 @@ const HomeScreen = () => {
             task={item}
             completeTask={() => handleToggle(item.task_id || '')}
             onEdit={() =>
-              navigation.navigate('EditTaskScreen', {
+              navigation.navigate('EditTask', {
                 task_id: item.task_id || '',
               })
             }
@@ -76,4 +89,4 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default Home;

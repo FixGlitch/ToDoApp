@@ -3,34 +3,28 @@ import {
   View,
   Text,
   TextInput,
-  StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { createUser } from '../../redux/actions/userActions';
-import { RootState } from '../../redux/store';
-import TouchableButton from '../components/button/TouchableButton';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { createUser } from '../../../redux/actions/userActions';
+import { RootState } from '../../../redux/store';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/types';
+import { RootStackParamList } from '../../navigation/types';
+import FGButton from '../../components/FGButton/FGButton';
+import { COLORS, styles } from './styles';
 
-type RegisterScreenNavigationProp = StackNavigationProp<
+type RegisterNavigationProp = StackNavigationProp<
   RootStackParamList,
   'Register'
 >;
 
-interface RegisterScreenProps {
-  navigation: RegisterScreenNavigationProp;
+interface RegisterProps {
+  navigation: RegisterNavigationProp;
 }
 
-const COLORS = {
-  primary: '#6200ee',
-  error: 'red',
-  border: '#ddd',
-};
-
-const RegisterScreen = ({ navigation }: RegisterScreenProps) => {
+const Register = ({ navigation }: RegisterProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -74,7 +68,7 @@ const RegisterScreen = ({ navigation }: RegisterScreenProps) => {
       {loading ? (
         <ActivityIndicator size="large" color={COLORS.primary} />
       ) : (
-        <TouchableButton text="Register" onPress={handleRegister} />
+        <FGButton text="Register" onPress={handleRegister} />
       )}
       {error && <Text style={styles.errorText}>{error}</Text>}
       <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
@@ -86,34 +80,4 @@ const RegisterScreen = ({ navigation }: RegisterScreenProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-  },
-  errorText: {
-    color: COLORS.error,
-    marginTop: 10,
-  },
-  input: {
-    borderColor: COLORS.border,
-    borderWidth: 1,
-    height: 40,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    width: '100%',
-  },
-  signInText: {
-    color: COLORS.primary,
-    marginTop: 20,
-    textDecorationLine: 'underline',
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-});
-
-export default RegisterScreen;
+export default Register;

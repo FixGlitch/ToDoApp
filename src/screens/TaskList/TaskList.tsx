@@ -5,27 +5,24 @@ import {
   FlatList,
   Button,
   Alert,
-  StyleSheet,
   ActivityIndicator,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../redux/store';
-import { getAllTasks } from '../../redux/actions/taskActions';
-import TaskRow from '../components/Task/Task';
-import { Task } from '../../redux/types/taskTypes';
+import { RootState, AppDispatch } from '../../../redux/store';
+import { getAllTasks } from '../../../redux/actions/taskActions';
+import TaskRow from '../../components/Task/Task';
+import { Task } from '../../../redux/types/taskTypes';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/types';
+import { RootStackParamList } from '../../navigation/types';
+import { styles } from './styles';
 
-type TaskListScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Home'
->;
+type TaskListNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
 interface TaskListProps {
-  navigation: TaskListScreenNavigationProp;
+  navigation: TaskListNavigationProp;
 }
 
-const TaskListScreen = ({ navigation }: TaskListProps) => {
+const TaskList = ({ navigation }: TaskListProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const { tasks, loading, error } = useSelector(
     (state: RootState) => state.tasks,
@@ -45,7 +42,7 @@ const TaskListScreen = ({ navigation }: TaskListProps) => {
       task={item}
       completeTask={(taskId) => console.log('Complete task:', taskId)}
       onEdit={() =>
-        navigation.navigate('EditTaskScreen', { task_id: item.task_id || '' })
+        navigation.navigate('EditTask', { task_id: item.task_id || '' })
       }
     />
   );
@@ -67,17 +64,10 @@ const TaskListScreen = ({ navigation }: TaskListProps) => {
       />
       <Button
         title="Add New Task"
-        onPress={() => navigation.navigate('CreateTaskScreen')}
+        onPress={() => navigation.navigate('CreateTask')}
       />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-});
-
-export default TaskListScreen;
+export default TaskList;

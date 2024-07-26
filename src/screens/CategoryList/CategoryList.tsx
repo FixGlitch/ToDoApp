@@ -1,21 +1,19 @@
 import React, { useEffect } from 'react';
-import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
+import { View, Text, FlatList, Button } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../redux/store';
+import { RootState, AppDispatch } from '../../../redux/store';
 import {
   deleteCategory,
   getAllCategories,
-} from '../../redux/actions/categoryActions';
-import { Category } from '../../redux/types/categoryTypes';
+} from '../../../redux/actions/categoryActions';
+import { Category } from '../../../redux/types/categoryTypes';
 import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/types';
+import { RootStackParamList } from '../../navigation/types';
+import { styles } from './styles';
 
-type CategoryListScreenProps = StackScreenProps<
-  RootStackParamList,
-  'CategoryListScreen'
->;
+type CategoryListProps = StackScreenProps<RootStackParamList, 'CategoryList'>;
 
-const CategoryListScreen = ({ navigation }: CategoryListScreenProps) => {
+const CategoryList = ({ navigation }: CategoryListProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const { categories, loading, error } = useSelector(
     (state: RootState) => state.categories,
@@ -43,7 +41,7 @@ const CategoryListScreen = ({ navigation }: CategoryListScreenProps) => {
             <Button
               title="Edit"
               onPress={() =>
-                navigation.navigate('EditCategoryScreen', {
+                navigation.navigate('EditCategory', {
                   category_id: item.category_id,
                 })
               }
@@ -57,26 +55,10 @@ const CategoryListScreen = ({ navigation }: CategoryListScreenProps) => {
       />
       <Button
         title="Add Category"
-        onPress={() => navigation.navigate('AddCategoryScreen')}
+        onPress={() => navigation.navigate('AddCategory')}
       />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  item: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 16,
-  },
-});
-
-export default CategoryListScreen;
+export default CategoryList;

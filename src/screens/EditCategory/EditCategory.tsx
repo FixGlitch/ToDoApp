@@ -1,25 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../redux/store';
+import { RootState, AppDispatch } from '../../../redux/store';
 import {
   getCategoryById,
   updateCategory,
-} from '../../redux/actions/categoryActions';
-import { Category } from '../../redux/types/categoryTypes';
+} from '../../../redux/actions/categoryActions';
+import { Category } from '../../../redux/types/categoryTypes';
 import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/types';
+import { RootStackParamList } from '../../navigation/types';
+import { styles } from './styles';
 
-type EditCategoryScreenProps = StackScreenProps<
-  RootStackParamList,
-  'EditCategoryScreen'
->;
+type EditCategoryProps = StackScreenProps<RootStackParamList, 'EditCategory'>;
 
-const COLORS = {
-  border: '#ccc',
-};
-
-const EditCategoryScreen = ({ route, navigation }: EditCategoryScreenProps) => {
+const EditCategory = ({ route, navigation }: EditCategoryProps) => {
   const { category_id } = route.params;
   const dispatch = useDispatch<AppDispatch>();
   const { selectedCategory, loading, error } = useSelector(
@@ -72,22 +66,4 @@ const EditCategoryScreen = ({ route, navigation }: EditCategoryScreenProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  input: {
-    borderColor: COLORS.border,
-    borderWidth: 1,
-    height: 40,
-    marginBottom: 12,
-    paddingHorizontal: 8,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 16,
-  },
-});
-
-export default EditCategoryScreen;
+export default EditCategory;

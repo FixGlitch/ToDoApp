@@ -2,34 +2,25 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
-  StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { loginUser } from '../../redux/actions/userActions';
-import TouchableButton from '../components/button/TouchableButton';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { loginUser } from '../../../redux/actions/userActions';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/types';
+import { RootStackParamList } from '../../navigation/types';
+import FGTextInput from '../../components/FGTextInput/FGTextInput';
+import FGButton from '../../components/FGButton/FGButton';
+import { COLORS, styles } from './styles';
 
-type SignInScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'SignIn'
->;
+type SignInNavigationProp = StackNavigationProp<RootStackParamList, 'SignIn'>;
 
-interface SignInScreenProps {
-  navigation: SignInScreenNavigationProp;
+interface SignInProps {
+  navigation: SignInNavigationProp;
 }
 
-const COLORS = {
-  primary: '#6200ee',
-  error: 'red',
-  border: '#ddd',
-};
-
-const SignInScreen = ({ navigation }: SignInScreenProps) => {
+const SignIn = ({ navigation }: SignInProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
@@ -60,23 +51,30 @@ const SignInScreen = ({ navigation }: SignInScreenProps) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign In</Text>
-      <TextInput
-        style={styles.input}
+      <FGTextInput
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
+        containerStyle={styles.inputContainer}
+        inputStyle={styles.input}
       />
-      <TextInput
-        style={styles.input}
+      <FGTextInput
         placeholder="Password"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
+        containerStyle={styles.inputContainer}
+        inputStyle={styles.input}
       />
       {loading ? (
         <ActivityIndicator size="large" color={COLORS.primary} />
       ) : (
-        <TouchableButton text="Sign In" onPress={handleSignIn} />
+        <FGButton
+          text="Sign In"
+          onPress={handleSignIn}
+          buttonStyle={styles.buttonStyle}
+          textStyle={styles.buttonText}
+        />
       )}
       {error && <Text style={styles.errorText}>{error}</Text>}
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>
@@ -86,34 +84,4 @@ const SignInScreen = ({ navigation }: SignInScreenProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-  },
-  errorText: {
-    color: COLORS.error,
-    marginTop: 10,
-  },
-  input: {
-    borderColor: COLORS.border,
-    borderWidth: 1,
-    height: 40,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    width: '100%',
-  },
-  registerText: {
-    color: COLORS.primary,
-    marginTop: 20,
-    textDecorationLine: 'underline',
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-});
-
-export default SignInScreen;
+export default SignIn;

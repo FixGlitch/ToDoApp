@@ -1,16 +1,13 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import { Task } from '../../../redux/types/taskTypes';
+import { styles } from './styles';
 
 interface TaskRowProps {
   task: Task;
   completeTask: (taskId: string) => void;
   onEdit: () => void;
 }
-
-const COLORS = {
-  border: '#ccc',
-};
 
 const TaskRow = ({ task, completeTask, onEdit }: TaskRowProps) => {
   return (
@@ -26,13 +23,5 @@ const TaskRow = ({ task, completeTask, onEdit }: TaskRowProps) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  row: {
-    borderBottomColor: COLORS.border,
-    borderBottomWidth: 1,
-    padding: 16,
-  },
-});
 
 export default TaskRow;

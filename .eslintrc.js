@@ -17,4 +17,7 @@ module.exports = {
     'react-native/react-native': true,
     browser: true,
   },
+  rules: {
+    '@typescript-eslint/no-var-requires': 'off',
+  },
 };

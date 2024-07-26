@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   generateDateGridForMonth,
   getPreviousMonth,
   getNextMonth,
-} from '../utils/utils';
+} from '../../utils/utils';
 import { format } from 'date-fns';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import TaskHistoryGrid from '../components/TaskHistory/TaskHistoryGrid';
-import TaskHistoryDetails from '../components/TaskHistory/TaskHistoryDetails';
+import TaskHistoryGrid from '../../components/TaskHistory/TaskHistoryGrid';
+import TaskHistoryDetails from '../../components/TaskHistory/TaskHistoryDetails';
+import { COLORS, styles } from './styles';
 
 interface TaskType {
   title: string;
@@ -18,12 +19,6 @@ interface TaskType {
 }
 
 const COMPLETED_TASKS_STORAGE_KEY = '@completedTasks';
-
-const COLORS = {
-  background: '#f5f5f5',
-  text: '#333',
-  icon: '#6200ee',
-};
 
 const loadCompletedTasks = async (): Promise<TaskType[]> => {
   try {
@@ -37,7 +32,7 @@ const loadCompletedTasks = async (): Promise<TaskType[]> => {
   return [];
 };
 
-const HistoryScreen = () => {
+const History = () => {
   const [completedTasks, setCompletedTasks] = useState<TaskType[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [dateGrid, setDateGrid] = useState(
@@ -117,29 +112,4 @@ const HistoryScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: COLORS.background,
-    flex: 1,
-    padding: 20,
-  },
-  monthLabel: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  navigationContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  title: {
-    color: COLORS.text,
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-});
-
-export default HistoryScreen;
+export default History;
