@@ -8,25 +8,20 @@ export const COLORS = {
 
 export const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.background,
+    borderRadius: 32,
     flex: 1,
-    padding: 20,
+    marginHorizontal: 10,
+    paddingHorizontal: 10,
   },
   monthLabel: {
-    fontSize: 18,
+    color: COLORS.text,
+    fontSize: 20,
     fontWeight: 'bold',
+    marginHorizontal: 20,
   },
   navigationContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  title: {
-    color: COLORS.text,
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
+    justifyContent: 'center',
   },
 });

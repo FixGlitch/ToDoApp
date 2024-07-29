@@ -86,7 +86,6 @@ const History = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Completed Tasks History</Text>
       <View style={styles.navigationContainer}>
         <TouchableOpacity onPress={handlePreviousMonth}>
           <Icon name="arrow-back" size={30} color={COLORS.icon} />

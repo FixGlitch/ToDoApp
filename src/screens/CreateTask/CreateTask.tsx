@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../../redux/store';
 import { createTask } from '../../../redux/actions/taskActions';
@@ -7,13 +7,24 @@ import { getAllCategories } from '../../../redux/actions/categoryActions';
 import { Category } from '../../../redux/types/categoryTypes';
 import { Picker } from '@react-native-picker/picker';
 import { Task } from '../../../redux/types/taskTypes';
-import { StackScreenProps } from '@react-navigation/stack';
+import { useAppSelector } from '../../../redux/hooks';
+import { darkTheme, lightTheme } from '../../../theme/theme';
+import { createStyles } from './styles';
+import FGTextInput from '../../components/FGTextInput/FGTextInput';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import Burger from '../../components/Icons/Burger';
+import { useNavigation } from '@react-navigation/native';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootStackParamList } from '../../navigation/types';
-import { styles } from './styles';
+import FGButton from '../../components/FGButton/FGButton';
 
-type CreateTaskProps = StackScreenProps<RootStackParamList, 'CreateTask'>;
+type DrawerNavProp = DrawerNavigationProp<RootStackParamList, 'CreateTask'>;
 
-const CreateTask = ({ navigation }: CreateTaskProps) => {
+const CreateTaskScreen = () => {
+  const theme = useAppSelector((state) => state.theme.theme);
+  const currentTheme = theme === 'dark' ? darkTheme : lightTheme;
+  const styles = createStyles(currentTheme);
+
   const dispatch = useDispatch<AppDispatch>();
   const userId = useSelector(
     (state: RootState) => state.user.userDetail?.user_id,
@@ -23,6 +34,7 @@ const CreateTask = ({ navigation }: CreateTaskProps) => {
   const [description, setDescription] = useState<string>('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
+  const navigation = useNavigation<DrawerNavProp>();
 
   useEffect(() => {
     dispatch(getAllCategories())
@@ -61,46 +73,76 @@ const CreateTask = ({ navigation }: CreateTaskProps) => {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: currentTheme.colors.background },
+        ]}
+      >
+        <Text style={{ color: currentTheme.colors.onBackground }}>
+          Loading...
+        </Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Name</Text>
-      <TextInput
-        style={styles.input}
+      <View style={styles.containerSideBar}>
+        <TouchableOpacity
+          style={styles.sidebarButton}
+          onPress={() => navigation.openDrawer()}
+        >
+          <Burger color={currentTheme.colors.onPrimary} />
+        </TouchableOpacity>
+      </View>
+      <Text style={styles.title}>Create New Task</Text>
+      <Text style={styles.subTitle}>Task name</Text>
+      <FGTextInput
+        placeholder="Enter task name"
         value={name}
         onChangeText={setName}
-        placeholder="Enter task name"
+        containerStyle={styles.inputContainer}
+        inputStyle={styles.input}
+        placeholderTextColor={currentTheme.colors.onPrimary}
       />
-      <Text style={styles.label}>Description</Text>
-      <TextInput
-        style={styles.input}
+      <Text style={styles.subTitle}>Description</Text>
+      <FGTextInput
+        placeholder="Enter task description"
         value={description}
         onChangeText={setDescription}
-        placeholder="Enter task description"
+        containerStyle={styles.inputContainer}
+        inputStyle={styles.input}
+        placeholderTextColor={currentTheme.colors.onPrimary}
       />
-      <Text style={styles.label}>Category</Text>
-      <Picker
-        selectedValue={selectedCategoryId}
-        onValueChange={(itemValue) => setSelectedCategoryId(itemValue)}
-        style={styles.picker}
-      >
-        <Picker.Item label="Select a category" value="" />
-        {categories.map((category: Category) => (
-          <Picker.Item
-            key={category.category_id}
-            label={category.name}
-            value={category.category_id}
-          />
-        ))}
-      </Picker>
-      <Button title="Create Task" onPress={handleSubmit} />
+      <View style={styles.containerCategory}>
+        <Text style={styles.categoryTitle}>Category</Text>
+        <Picker
+          selectedValue={selectedCategoryId}
+          onValueChange={(itemValue) => setSelectedCategoryId(itemValue)}
+          style={[
+            styles.picker,
+            { borderColor: currentTheme.colors.onPrimary },
+          ]}
+        >
+          <Picker.Item label="Select a category" value="" />
+          {categories.map((category: Category) => (
+            <Picker.Item
+              key={category.category_id}
+              label={category.name}
+              value={category.category_id}
+            />
+          ))}
+        </Picker>
+        <FGButton
+          text="Create Task"
+          onPress={handleSubmit}
+          buttonStyle={styles.buttonStyle}
+          textStyle={styles.buttonText}
+        />
+      </View>
     </View>
   );
 };
 
-export default CreateTask;
+export default CreateTaskScreen;

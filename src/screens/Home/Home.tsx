@@ -1,90 +1,83 @@
-import React, { useCallback } from 'react';
-import { View, Text, Button, FlatList, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../../redux/store';
-import {
-  getAllTasks,
-  toggleTaskStatus,
-} from '../../../redux/actions/taskActions';
-import TaskRow from '../../components/Task/Task';
+import { AppDispatch, RootState } from '../../../redux/store';
 import { logoutUser } from '../../../redux/actions/userActions';
 import { useNavigation } from '@react-navigation/native';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootStackParamList } from '../../navigation/types';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { useFocusEffect } from '@react-navigation/native';
-import { useTheme } from 'react-native-paper';
-import ThemeToggleButton from '../../components/DarkSwitcher/DarkSwitcher';
-import { styles } from './styles';
+import { createStyles } from './styles';
+import { darkTheme, lightTheme } from '../../../theme/theme';
+import { useAppSelector } from '../../../redux/hooks';
+import FGButtonInProgress from '../../components/FGButtonInProgress/FGButtonInProgress';
+import FGButtonDone from '../../components/FGButtonDone/FGButtonDone';
+import FGButtonToDo from '../../components/FGButtonToDo/FGButtonToDo';
+import History from '../History/History';
+import Burger from '../../components/Icons/Burger';
 
-type HomeNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+type DrawerNavProp = DrawerNavigationProp<RootStackParamList, 'Home'>;
 
 const Home = () => {
+  const theme = useAppSelector((state) => state.theme.theme);
+  const userDetail = useSelector((state: RootState) => state.user.userDetail);
+  const currentTheme = theme === 'dark' ? darkTheme : lightTheme;
+  const styles = createStyles(currentTheme);
   const dispatch = useDispatch<AppDispatch>();
-  const navigation = useNavigation<HomeNavigationProp>();
-  const { tasks, loading, error } = useSelector(
-    (state: RootState) => state.tasks,
-  );
-  const { colors } = useTheme();
+  const navigation = useNavigation<DrawerNavProp>();
 
-  const fetchTasks = useCallback(() => {
-    dispatch(getAllTasks());
-  }, [dispatch]);
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchTasks();
-    }, [fetchTasks]),
-  );
-
-  const handleToggle = (taskId: string) => {
-    dispatch(toggleTaskStatus(taskId));
-  };
-
-  const handleLogout = async () => {
+  const handleTaskList = async () => {
     try {
       await dispatch(logoutUser()).unwrap();
-      navigation.replace('SignIn');
+      navigation.navigate('TaskList');
     } catch (err) {
       console.error('Logout error:', err);
     }
   };
 
-  if (loading) {
-    return <ActivityIndicator size="large" color={colors.primary} />;
-  }
-
-  if (error) {
-    return (
-      <Text style={[styles.errorText, { color: colors.error }]}>
-        Error: {error}
-      </Text>
-    );
-  }
-
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <ThemeToggleButton />
-      <Button
-        title="Create Task"
-        onPress={() => navigation.navigate('CreateTask')}
-        color={colors.primary}
+    <View style={styles.container}>
+      <View style={styles.containerUser}>
+        <View style={styles.containerUserDetail}>
+          <View style={styles.userProfile} />
+          <Text style={styles.userData}>{userDetail?.username}</Text>
+        </View>
+        <View style={styles.containerSideBar}>
+          <TouchableOpacity
+            style={styles.sidebarButton}
+            onPress={() => navigation.openDrawer()}
+          >
+            <Burger color={currentTheme.colors.background} />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <Text style={styles.title}>My Task</Text>
+      <FGButtonToDo
+        title="To Do"
+        subTitle="13 task now - 1 started"
+        onPress={handleTaskList}
+        buttonStyle={styles.containerTask}
+        titleStyle={styles.info}
+        subTitleStyle={styles.subInfo}
       />
-      <Button title="Logout" onPress={handleLogout} color={colors.primary} />
-      <FlatList
-        data={tasks}
-        renderItem={({ item }) => (
-          <TaskRow
-            task={item}
-            completeTask={() => handleToggle(item.task_id || '')}
-            onEdit={() =>
-              navigation.navigate('EditTask', {
-                task_id: item.task_id || '',
-              })
-            }
-          />
-        )}
-        keyExtractor={(item) => item.task_id || ''}
+      <FGButtonInProgress
+        title="In Progress"
+        subTitle="5 task now - 5 started"
+        onPress={handleTaskList}
+        buttonStyle={styles.containerTask}
+        titleStyle={styles.info}
+        subTitleStyle={styles.subInfo}
       />
+      <FGButtonDone
+        title="Done"
+        subTitle="21 task now - 21 started"
+        onPress={handleTaskList}
+        buttonStyle={styles.containerTask}
+        titleStyle={styles.info}
+        subTitleStyle={styles.subInfo}
+      />
+      <View style={styles.containerDate}>
+        <History />
+      </View>
     </View>
   );
 };

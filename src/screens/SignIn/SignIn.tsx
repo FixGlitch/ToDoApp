@@ -8,19 +8,24 @@ import {
 } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { loginUser } from '../../../redux/actions/userActions';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigation/types';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { darkTheme, lightTheme } from '../../../theme/theme';
+import { createStyles } from './styles';
 import FGTextInput from '../../components/FGTextInput/FGTextInput';
 import FGButton from '../../components/FGButton/FGButton';
-import { COLORS, styles } from './styles';
+import { RootStackParamList } from '../../navigation/types';
 
-type SignInNavigationProp = StackNavigationProp<RootStackParamList, 'SignIn'>;
+type SignInNavigationProp = DrawerNavigationProp<RootStackParamList, 'SignIn'>;
 
 interface SignInProps {
   navigation: SignInNavigationProp;
 }
 
 const SignIn = ({ navigation }: SignInProps) => {
+  const theme = useAppSelector((state) => state.theme.theme);
+  const currentTheme = theme === 'dark' ? darkTheme : lightTheme;
+  const styles = createStyles(currentTheme);
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
@@ -37,7 +42,7 @@ const SignIn = ({ navigation }: SignInProps) => {
         loginUser({ username, password }),
       ).unwrap();
       if (resultAction) {
-        navigation.replace('Home');
+        navigation.navigate('Home');
       }
     } catch (err) {
       console.error('Login error:', err);
@@ -57,6 +62,7 @@ const SignIn = ({ navigation }: SignInProps) => {
         onChangeText={setUsername}
         containerStyle={styles.inputContainer}
         inputStyle={styles.input}
+        placeholderTextColor={currentTheme.colors.onPrimary}
       />
       <FGTextInput
         placeholder="Password"
@@ -65,9 +71,10 @@ const SignIn = ({ navigation }: SignInProps) => {
         onChangeText={setPassword}
         containerStyle={styles.inputContainer}
         inputStyle={styles.input}
+        placeholderTextColor={currentTheme.colors.onPrimary}
       />
       {loading ? (
-        <ActivityIndicator size="large" color={COLORS.primary} />
+        <ActivityIndicator size="large" color={currentTheme.colors.onPrimary} />
       ) : (
         <FGButton
           text="Sign In"

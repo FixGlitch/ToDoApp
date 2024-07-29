@@ -10,6 +10,7 @@ const COLORS = {
   mediumCount: '#40c463',
   lowCount: '#9be9a8',
   noCount: '#ebedf0',
+  title: '#1d1b1d',
 };
 
 export const getColor = (count: number) => {
@@ -45,22 +46,23 @@ export const styles = StyleSheet.create({
   },
   day: {
     alignItems: 'center',
+    borderRadius: 5,
     height: 30,
     justifyContent: 'center',
-    margin: 7,
-    width: 30,
+    margin: 3,
+    width: 40,
   },
   dayText: {
-    fontSize: 12,
+    color: COLORS.blackOverlay,
+    fontSize: 16,
   },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   modalContainer: {
     alignItems: 'center',
-    backgroundColor: COLORS.blackOverlay,
     flex: 1,
     justifyContent: 'center',
   },
@@ -81,13 +83,15 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
   weekDay: {
+    color: COLORS.blackOverlay,
     fontWeight: 'bold',
     textAlign: 'center',
-    width: 30,
+    width: 40,
   },
   weekDaysContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginBottom: 10,
+    paddingHorizontal: 10,
   },
 });
